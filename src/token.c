@@ -83,4 +83,6 @@ const char *token_type_to_string(token_types type) {
         case ILLEGAL:
             return "ILLEGAL";
     }
+
+    return "UNKNOWN";
 }

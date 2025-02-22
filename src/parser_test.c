@@ -24,13 +24,14 @@ void test_let_statements() {
 
     if (parser.errors.length > 0) {
         char *message = malloc(sizeof(char) * 256);
-        snprintf(message, 256, "parser has %lu errors\n", parser.errors.length);
-        TEST_MESSAGE(message);
+        char *error_message = malloc(sizeof(char) * 256);
+        snprintf(error_message, 256, "parser has %lu errors\n", parser.errors.length);
+        TEST_MESSAGE(error_message);
 
         for (size_t i = 0; i < parser.errors.length; i++) {
             string_to_c_string_copy(message, &parser.errors.head[i], 256);
-            snprintf(message, 256, "%s\n", message);
-            TEST_MESSAGE(message);
+            snprintf(error_message, 256, "%s\n", message);
+            TEST_MESSAGE(error_message);
         }
 
         free(message);

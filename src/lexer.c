@@ -164,7 +164,7 @@ token_t lexer_next_token(lexer_t *lexer) {
 
         case ';':
             token.type = SEMICOLON;
-            token.literal = token.literal = string_slice(lexer->position, 1, lexer->input);
+            token.literal = string_slice(lexer->position, 1, lexer->input);
             break;
 
         case '(':
@@ -194,7 +194,7 @@ token_t lexer_next_token(lexer_t *lexer) {
 
         case 0:
             token.type = TOKEN_EOF;
-            token.literal = token.literal = string_slice(0, 0, lexer->input);
+            token.literal = string_slice(0, 0, lexer->input);
             break;
 
         default: // Handle default case or errors
