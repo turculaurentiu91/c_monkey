@@ -1,0 +1,29 @@
+name: C Tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create build directory
+        run: mkdir -p build/tests
+
+      - name: Build all
+        run: make all
+
+      - name: Run lexer tests
+        run: make lexer_test
+
+      - name: Run parser tests
+        run: make parser_test
+
+      - name: Run strings tests
+        run: make strings_test

@@ -1,0 +1,77 @@
+#include "parser.h"
+#include <stdlib.h>
+#include <string.h>
+#include "../lib/unity.h"
+#include "ast.h"
+#include "lexer.h"
+#include "strings.h"
+
+void setUp() {}
+void tearDown() {};
+
+struct test_t {
+    string_t expected_identifier;
+};
+
+void test_let_statements() {
+    char *input = "let x = 5;\n"
+                  "let y = 10;\n"
+                  "let foobar = 838383;\n";
+
+    lexer_t lexer = lexer_new(input, strlen(input));
+    parser_t parser = parser_new(&lexer);
+    program_t *program = parser_parse_program(&parser);
+
+    if (parser.errors.length > 0) {
+        char *message = malloc(sizeof(char) * 256);
+        snprintf(message, 256, "parser has %lu errors\n", parser.errors.length);
+        TEST_MESSAGE(message);
+
+        for (size_t i = 0; i < parser.errors.length; i++) {
+            string_to_c_string_copy(message, &parser.errors.head[i], 256);
+            snprintf(message, 256, "%s\n", message);
+            TEST_MESSAGE(message);
+        }
+
+        free(message);
+        TEST_FAIL();
+    }
+
+
+    TEST_ASSERT_NOT_NULL(program);
+
+    TEST_ASSERT_EQUAL(3, program->length);
+
+    struct test_t tests[3] = {
+            {string_new_from_literal("x")},
+            {string_new_from_literal("y")},
+            {string_new_from_literal("foobar")},
+    };
+
+    for (int i = 0; i < 3; i++) {
+        statement_t statement = program->statements[i];
+        struct test_t test = tests[i];
+
+        TEST_ASSERT_EQUAL(LET_STATEMENT, statement.type);
+
+
+        string_t let_str = string_new_from_literal("let");
+        string_t *literal = let_statement_token_literal(&statement.let);
+
+        TEST_ASSERT_TRUE(string_equals(&let_str, literal));
+
+        TEST_ASSERT_TRUE(string_equals(&test.expected_identifier, statement.let.name.value));
+
+        string_t *name_literal = identifier_expression_token_literal(&statement.let.name);
+
+        TEST_ASSERT_TRUE(string_equals(&test.expected_identifier, name_literal));
+    }
+
+    parser_free(&parser);
+}
+
+int main() {
+    UNITY_BEGIN();
+    RUN_TEST(test_let_statements);
+    return UNITY_END();
+}
