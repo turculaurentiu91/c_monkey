@@ -72,13 +72,32 @@ bool parse_let_statement(let_statement_t *dest, parser_t *parser) {
     return true;
 }
 
+bool parse_return_statement(return_statement_t *dest, parser_t *parser) {
+    dest->token.type = parser->current_token.type;
+    dest->token.literal = parser->current_token.literal;
+
+    next_token(parser);
+
+    // TODO: we're skipping the expressions until we encounter a semicolon
+    while (!curr_token_is(parser, SEMICOLON)) {
+        next_token(parser);
+    }
+
+    return true;
+}
+
 
 bool parse_statement(statement_t *dest, parser_t *parser) {
 
     switch (parser->current_token.type) {
         case LET:
             dest->type = LET_STATEMENT;
-            return parse_let_statement(&dest->let, parser);
+            return parse_let_statement(&dest->let_stmt, parser);
+
+        case RETURN:
+            dest->type = RETURN_STATEMENT;
+            return parse_return_statement(&dest->return_stmt, parser);
+
         default:
             return false;
     }

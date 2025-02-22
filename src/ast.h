@@ -9,6 +9,7 @@
 
 typedef enum {
     LET_STATEMENT,
+    RETURN_STATEMENT,
 } statement_types;
 
 
@@ -34,11 +35,17 @@ typedef struct {
     expression_t value;
 } let_statement_t;
 
+typedef struct {
+    token_t token;
+    expression_t return_value;
+} return_statement_t;
+
 
 typedef struct {
     statement_types type;
     union {
-        let_statement_t let;
+        let_statement_t let_stmt;
+        return_statement_t return_stmt;
     };
 } statement_t;
 
@@ -49,6 +56,8 @@ typedef struct {
 } program_t;
 
 string_t *let_statement_token_literal(let_statement_t *let);
+string_t *return_statement_token_literal(return_statement_t *return_stmt);
+
 string_t *identifier_expression_token_literal(identifier_expression_t *identifier);
 
 program_t *program_new();

@@ -6,6 +6,7 @@
 
 
 string_t *let_statement_token_literal(let_statement_t *let) { return let->token.literal; }
+string_t *return_statement_token_literal(return_statement_t *return_stmt) { return return_stmt->token.literal; }
 
 string_t *identifier_expression_token_literal(identifier_expression_t *identifier) { return identifier->token.literal; }
 
